@@ -18,6 +18,7 @@ var (
 	green   = color.RGBA{10, 255, 50, 255}
 	boids   [boidCount]*Boid
 	boidMap [screenWidth + 1][screenHeight + 1]int
+	// rWlock  = sync.RWMutex{}
 )
 
 type Game struct{}
@@ -40,17 +41,22 @@ func (g *Game) Layout(_, _ int) (w, h int) {
 }
 
 func main() {
-	// for i, row := range boidMap {
-	// 	for j := range row {
-	// 		boidMap[i][j] = -1
-	// 	}
-	// }
+	// Set every point of BoidMap to -1
+	for i, row := range boidMap {
+		for j := range row {
+			boidMap[i][j] = -1
+		}
+	}
 
+	// Create Boid with random position, put them in to boids (array) and BoidMap (2 Dimension array)
 	for i := 0; i < boidCount; i++ {
 		createBoid(i)
 	}
+
 	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
 	ebiten.SetWindowTitle("Boids in a box")
+	// Start the game, draw each boid (by 4 point in the screen)
+
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
