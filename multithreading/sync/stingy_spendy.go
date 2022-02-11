@@ -15,9 +15,9 @@ var (
 
 func stingy() {
 	for i := 0; i <= 1000; i++ {
-		// lock.Lock()
+		lock.Lock()
 		money += 10
-		// lock.Unlock()
+		lock.Unlock()
 		time.Sleep(1 * time.Millisecond)
 	}
 	println("Stingy OK")
@@ -25,9 +25,9 @@ func stingy() {
 
 func spendy() {
 	for i := 0; i <= 1000; i++ {
-		// lock.Lock()
+		lock.Lock()
 		money -= 10
-		// lock.Unlock()
+		lock.Unlock()
 		time.Sleep(1 * time.Millisecond)
 	}
 	println("Spendy OK")
