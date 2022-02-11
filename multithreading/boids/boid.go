@@ -66,7 +66,11 @@ func createBoid(bid int) {
 		id:       bid,
 	}
 
+	// put to boids list (array)
 	boids[bid] = &b
+	// set value in 2D array BoidMap
 	boidMap[int(b.position.x)][int(b.position.y)] = b.id
+
+	// start Moving Boid
 	go b.start()
 }
