@@ -40,7 +40,7 @@ func main() {
 		generateRandomMatrix(&matrixA)
 		generateRandomMatrix(&matrixB)
 		for row := 0; row < matrixSize; row++ {
-			workOutRow(row)
+			workOutRow(row) // each worker will handle this
 			fmt.Printf("%v\n", result[row])
 		}
 	}
