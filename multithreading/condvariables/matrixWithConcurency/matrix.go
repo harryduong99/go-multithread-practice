@@ -20,7 +20,7 @@ var (
 	matrixB   = [matrixSize][matrixSize]int{}
 	result    = [matrixSize][matrixSize]int{}
 	rwLock    = sync.RWMutex{}
-	cond      = sync.NewCond(rwLock.RLocker())
+	cond      = sync.NewCond(rwLock.RLocker()) // Reading condition
 	waitGroup = sync.WaitGroup{}
 )
 
