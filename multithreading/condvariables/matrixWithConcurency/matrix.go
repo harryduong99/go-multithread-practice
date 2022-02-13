@@ -1,5 +1,9 @@
 package main
 
+// this example showing the way we multiplcation for a pair of matrix.
+// We will have to calculate 100 pairs of them.
+// instead of create 100 pairs then calculate, we will do it paralel, create and calculate at the same time
+
 import (
 	"fmt"
 	"math/rand"
@@ -30,9 +34,9 @@ func generateRandomMatrix(matrix *[matrixSize][matrixSize]int) {
 
 func workOutRow(row int) {
 	rwLock.RLock()
-	for {
-		waitGroup.Done()
-		cond.Wait()
+	for { // do it "forever"
+		waitGroup.Done() // done from the previous calculation
+		cond.Wait()      // waiting for the broadcast from the main thread
 		for col := 0; col < matrixSize; col++ {
 			for i := 0; i < matrixSize; i++ {
 				result[row][col] += matrixA[row][i] * matrixB[i][col]
@@ -51,13 +55,13 @@ func main() {
 
 	start := time.Now()
 	for i := 0; i < 100; i++ {
-		waitGroup.Wait()
-		rwLock.Lock()
+		waitGroup.Wait() // wating for the worker (calculation for previous pair) done (line 38)
+		rwLock.Lock()    // Lock the writing
 		generateRandomMatrix(&matrixA)
 		generateRandomMatrix(&matrixB)
-		waitGroup.Add(matrixSize)
+		waitGroup.Add(matrixSize) // since waitgroup was released (Done()) (line 38), it was assinged to zero, we need to reset it
 		rwLock.Unlock()
-		cond.Broadcast()
+		cond.Broadcast() // signal to line 39 that the creating matrix is done, it can be calculate now
 	}
 	elapsed := time.Since(start)
 	fmt.Println("Done")
