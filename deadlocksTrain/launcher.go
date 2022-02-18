@@ -4,8 +4,8 @@ import (
 	"log"
 	"sync"
 
-	"github.com/duongnam99/go-multithread-practice/deadlocks_train/common"
-	"github.com/duongnam99/go-multithread-practice/deadlocks_train/hierarchy"
+	"github.com/duongnam99/go-multithread-practice/deadlocksTrain/common"
+	"github.com/duongnam99/go-multithread-practice/deadlocksTrain/hierarchy"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

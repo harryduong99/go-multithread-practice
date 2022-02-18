@@ -1,44 +1,29 @@
-package arbitrator
+package hierarchy
 
 import (
-	"sync"
+	"sort"
 	"time"
 
-	"github.com/duongnam99/go-multithread-practice/deadlocks_train/common"
+	"github.com/duongnam99/go-multithread-practice/deadlocksTrain/common"
 )
 
-var (
-	controller = sync.Mutex{}
-	cond       = sync.NewCond(&controller)
-)
-
-func allFree(intersectionsToLock []*common.Intersection) bool {
-	for _, it := range intersectionsToLock {
-		if it.LockedBy >= 0 {
-			return false
-		}
-	}
-	return true
-}
-
-func lockIntersectionsInDistance(id, reserveStart int, reserveEnd int, crossings []*common.Crossing) {
+func lockIntersectionsInDistance(id, reserveStart, reserveEnd int, crossings []*common.Crossing) {
 	var intersectionsToLock []*common.Intersection
 	for _, crossing := range crossings {
-		if reserveEnd >= crossing.Position &&
-			reserveStart <= crossing.Position &&
-			crossing.Intersection.LockedBy != id {
+		if reserveEnd >= crossing.Position && reserveStart <= crossing.Position && crossing.Intersection.LockedBy != id {
 			intersectionsToLock = append(intersectionsToLock, crossing.Intersection)
 		}
 	}
-	controller.Lock()
-	for !allFree(intersectionsToLock) {
-		cond.Wait()
-	}
+
+	sort.Slice(intersectionsToLock, func(i, j int) bool {
+		return intersectionsToLock[i].Id < intersectionsToLock[j].Id
+	})
+
 	for _, it := range intersectionsToLock {
+		it.Mutex.Lock()
 		it.LockedBy = id
 		time.Sleep(10 * time.Millisecond)
 	}
-	controller.Unlock()
 }
 
 func MoveTrain(train *common.Train, distance int, crossings []*common.Crossing) {
@@ -50,10 +35,8 @@ func MoveTrain(train *common.Train, distance int, crossings []*common.Crossing) 
 			}
 			back := train.Front - train.TrainLength
 			if back == crossing.Position {
-				controller.Lock()
 				crossing.Intersection.LockedBy = -1
-				cond.Broadcast()
-				controller.Unlock()
+				crossing.Intersection.Mutex.Unlock()
 			}
 		}
 		time.Sleep(30 * time.Millisecond)

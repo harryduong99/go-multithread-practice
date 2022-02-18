@@ -3,7 +3,7 @@ package deadlock
 import (
 	"time"
 
-	"github.com/duongnam99/go-multithread-practice/deadlocks_train/common"
+	"github.com/duongnam99/go-multithread-practice/deadlocksTrain/common"
 )
 
 func MoveTrain(train *common.Train, distance int, crossings []*common.Crossing) {
