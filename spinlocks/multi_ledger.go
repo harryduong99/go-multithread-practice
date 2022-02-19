@@ -17,10 +17,10 @@ const (
 
 func performMovements(ledger *[totalAccounts]int32, locks *[totalAccounts]sync.Locker, totalTrans *int64) {
 	for {
-		accountA := rand.Intn(totalAccounts)
+		accountA := rand.Intn(totalAccounts) // random position in ledger
 		accountB := rand.Intn(totalAccounts)
 		for accountA == accountB {
-			accountB = rand.Intn(totalAccounts) // a must not equal to B
+			accountB = rand.Intn(totalAccounts) // A must not equal to B
 		}
 		amountToMove := rand.Int31n(maxAmountMoved)
 		toLock := []int{accountA, accountB}
